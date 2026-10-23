@@ -1,0 +1,174 @@
+﻿<Window x:Class="z2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Система управления проектами" Height="700" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="#F0F2F5">
+
+    <!-- Глобальные стили для кнопок и полей ввода -->
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#0078D7"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="Margin" Value="0,10,0,0"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="RowHeight" Value="30"/>
+        </Style>
+    </Window.Resources>
+
+    <TabControl Margin="10">
+
+        <!-- Вкладка 1: Проекты -->
+        <TabItem Header="Проекты">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/>
+                    <!-- Форма слева -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- Таблица справа -->
+                </Grid.ColumnDefinitions>
+
+                <!-- Форма добавления -->
+                <Border Grid.Column="0" Background="White" Padding="15" CornerRadius="5">
+                    <StackPanel>
+                        <TextBlock Text="Добавить проект" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                        <TextBlock Text="Название проекта:"/>
+                        <TextBox x:Name="txtProjectName"/>
+                        <Button Content="Создать проект" Click="BtnAddProject_Click"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Таблица -->
+                <DataGrid x:Name="dgProjects" Grid.Column="1" Margin="10,0,0,0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Название" Binding="{Binding Title}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+
+        <!-- Вкладка 2: Сотрудники -->
+        <TabItem Header="Сотрудники">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Background="White" Padding="15" CornerRadius="5">
+                    <StackPanel>
+                        <TextBlock Text="Добавить сотрудника" FontSize="16" FontWeight="Bold" Margin="0,0,0,15"/>
+                        <TextBlock Text="Имя сотрудника:"/>
+                        <TextBox x:Name="txtEmployeeName"/>
+                        <Button Content="Нанять сотрудника" Click="BtnAddEmployee_Click"/>
+                    </StackPanel>
+                </Border>
+
+                <DataGrid x:Name="dgEmployees" Grid.Column="1" Margin="10,0,0,0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+
+        <!-- Вкладка 3: Задачи -->
+        <TabItem Header="Задачи">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Форма сверху -->
+                    <RowDefinition Height="*"/>
+                    <!-- Таблица снизу -->
+                </Grid.RowDefinitions>
+
+                <!-- Форма добавления задачи -->
+                <Border Background="White" Padding="15" CornerRadius="5" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                            <TextBlock Text="Описание задачи:"/>
+                            <TextBox x:Name="txtTaskDesc"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                            <TextBlock Text="Проект:"/>
+                            <ComboBox x:Name="cmbTaskProject" DisplayMemberPath="Title" SelectedValuePath="Id"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                            <TextBlock Text="Исполнитель:"/>
+                            <ComboBox x:Name="cmbTaskEmployee" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="3" Margin="0,0,10,0">
+                            <TextBlock Text="Статус:"/>
+                            <ComboBox x:Name="cmbTaskStatus" SelectedIndex="0">
+                                <ComboBoxItem Content="Новая"/>
+                                <ComboBoxItem Content="В работе"/>
+                                <ComboBoxItem Content="Выполнена"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <Button Grid.Column="5" Content="Добавить задачу" VerticalAlignment="Bottom" Click="BtnAddTask_Click" Height="30"/>
+                    </Grid>
+                </Border>
+
+                <!-- Таблица задач -->
+                <DataGrid x:Name="dgTasks" Grid.Row="1" MouseDoubleClick="DgTasks_MouseDoubleClick">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Задача" Binding="{Binding Description}" Width="*"/>
+                        <DataGridTextColumn Header="Проект" Binding="{Binding ProjectName}" Width="150"/>
+                        <DataGridTextColumn Header="Исполнитель" Binding="{Binding EmployeeName}" Width="150"/>
+                        <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+
+        <!-- Вкладка 4: Отчёты -->
+        <TabItem Header="Отчеты">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Button Content="Сгенерировать отчет" Click="BtnGenerateReport_Click" Width="200"/>
+                </StackPanel>
+
+                <TextBox x:Name="txtReport" Grid.Row="1" IsReadOnly="True" 
+                         FontFamily="Consolas" FontSize="14" TextWrapping="Wrap" 
+                         VerticalScrollBarVisibility="Auto" Background="#F9F9F9" Padding="10"/>
+            </Grid>
+        </TabItem>
+
+    </TabControl>
+</Window>
